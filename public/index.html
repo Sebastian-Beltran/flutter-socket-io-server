@@ -2,36 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Socket Server</title>
+    <style type="text/css">
+        table.tftable {font-size:12px;color:#333333;width:100%;border-width: 1px;border-color: #729ea5;border-collapse: collapse;}
+        table.tftable th {font-size:12px;background-color:#acc8cc;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;text-align:left;}
+        table.tftable tr {background-color:#d4e3e5;}
+        table.tftable td {font-size:12px;border-width: 1px;padding: 8px;border-style: solid;border-color: #729ea5;}
+    </style>
 </head>
 <body>
-    <h1>Bands Web App</h1>
-    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <h1>Access Denied</h1>
+ 
+    <script src='socket.io/socket.io.js'></script>
     <script>
         var socket = io();
         socket.on('connect', function() {
-            console.log('Conectado al servidor');
+            console.log('Conexión establecida con el server');
         });
-
         socket.on('disconnect', function() {
-            console.log('Perdimos coneccion al servidor');
+            console.log('Conexión perdida con el server');
         });
-
-        socket.emit('mensaje', { nombre: 'Sebastian' });
-
+        // Es recomendable enviar un objeto no solo un string, etc.
+        socket.emit('mensaje', {nombre: 'Fernando'});
+        // Escuchar mensaje
         socket.on('mensaje', function(payload) {
             console.log('Escuchando:', payload);
         });
-        socket.on('nuevo-mensaje', function(payload) {
-            console.log('Escuchando Flutter:', payload);
+        // Escuchar mensaje
+        socket.on('sent-mensaje', function(payload) {
+            console.log('Escuchando SM:', payload);
         });
-
-        socket.on('active-bands', function(bands) {
+        // Escuchar mensaje
+        socket.on('active-bands', function(payload) {
+            console.log('Escuchando AB:');
             console.clear();
-            console.table( bands);
+            console.table(payload);
+ 
+            var s = payload
+            var cols = [];
+            for (var k in s) {
+            for (var c in s[k]) {
+                if (cols.indexOf(c)===-1) cols.push(c);
+            }
+            }
+            var html = '<table class=tftable><thead><tr>'+
+                cols.map(function(c){ return '<th>'+c+'</th>' }).join('')+
+                '</tr></thead><tbody>';
+            for (var l in s) {
+            html += '<tr>'+cols.map(function(c){ return '<td>'+(s[l][c]||'')+'</td>' }).join('')+'</tr>';
+            }
+            html += '</tbody></table>';
+            
+            document.body.innerHTML = html;
         });
     </script>
+ 
+    
 </body>
 </html>
