@@ -7,7 +7,7 @@
     <title>Socket Server</title>
 </head>
 <body>
-    <h1>Acceso denegado</h1>
+    <h1>Bands Web App</h1>
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
@@ -24,7 +24,14 @@
         socket.on('mensaje', function(payload) {
             console.log('Escuchando:', payload);
         });
+        socket.on('nuevo-mensaje', function(payload) {
+            console.log('Escuchando Flutter:', payload);
+        });
 
+        socket.on('active-bands', function(bands) {
+            console.clear();
+            console.table( bands);
+        });
     </script>
 </body>
 </html>
